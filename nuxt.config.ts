@@ -1,19 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-05-15',
-  devtools: { enabled: true },
-  modules: [
-    '@nuxtjs/tailwindcss',
-    '@vueuse/nuxt'
-  ],
-  tailwindcss: {
-    cssPath: './assets/css/main.css'
-  },
-  runtimeConfig: {
-    jwtSecret: process.env.JWT_SECRET || 'your-secret-key-change-in-production',
-    public: {
-      appName: 'Parking Enforcement Portal'
+  compatibilityDate: '2024-04-03',
+  devtools: { enabled: false },
+  modules: ['@nuxtjs/tailwindcss'],
+  css: ['~/assets/css/main.css'],
+  app: {
+    head: {
+      title: 'Parking Pass Request',
+      meta: [
+        { name: 'description', content: 'Request a temporary mobile parking pass or file a complaint' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+      ]
     }
-  },
-  ssr: false // Client-side rendering for localStorage compatibility
+  }
 })

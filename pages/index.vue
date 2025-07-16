@@ -1,233 +1,52 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-    <div class="container mx-auto px-4 py-8">
-      <!-- Header -->
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">
-          Parking Enforcement Portal
-        </h1>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-          Submit parking requests, appeals, or access your tenant portal
-        </p>
-      </div>
-
-      <!-- Navigation Cards -->
-      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-        <!-- Self-Serve Form -->
-        <div class="card hover:shadow-lg transition-shadow duration-200">
-          <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-            <h2 class="text-2xl font-semibold text-gray-900 mb-2">Quick Request</h2>
-            <p class="text-gray-600">Submit a parking request or appeal without an account</p>
+  <div class="min-h-screen bg-gray-50">
+    <AppHeader />
+    
+    <main class="max-w-md mx-auto px-4 py-8">
+      <div v-if="!showSuccess" class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="text-center mb-8">
+          <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2v0a2 2 0 01-2-2v-2a2 2 0 00-2-2H8z" />
+            </svg>
           </div>
-          <button @click="showSelfServeForm = true" class="btn-primary w-full">
-            Start Request
-          </button>
+          <h1 class="text-2xl font-bold text-gray-900 mb-2">Request Parking Pass</h1>
+          <p class="text-gray-600">Get temporary parking access for your visit</p>
         </div>
-
-        <!-- Tenant Portal -->
-        <div class="card hover:shadow-lg transition-shadow duration-200">
-          <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-4m-5 0H9m0 0H5m4 0V9a1 1 0 011-1h4a1 1 0 011 1v12m-6 0h6" />
-              </svg>
-            </div>
-            <h2 class="text-2xl font-semibold text-gray-900 mb-2">Tenant Portal</h2>
-            <p class="text-gray-600">Manage vehicles, guest parking, and view history</p>
-          </div>
-          <div class="space-y-3">
-            <NuxtLink to="/login" class="btn-primary w-full block text-center">
-              Sign In
+        
+        <ParkingRequestForm @success="handleSuccess" />
+        
+        <div class="mt-6 pt-6 border-t border-gray-200">
+          <p class="text-center text-sm text-gray-500">
+            Need to file a complaint? 
+            <NuxtLink to="/complaint" class="text-primary-600 hover:text-primary-700 font-medium">
+              Click here
             </NuxtLink>
-            <NuxtLink to="/register" class="btn-secondary w-full block text-center">
-              Create Account
-            </NuxtLink>
-          </div>
+          </p>
         </div>
       </div>
-
-      <!-- Self-Serve Form Modal -->
-      <div v-if="showSelfServeForm" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-          <div class="p-6">
-            <div class="flex justify-between items-center mb-6">
-              <h2 class="text-2xl font-semibold text-gray-900">Quick Request</h2>
-              <button @click="showSelfServeForm = false" class="text-gray-400 hover:text-gray-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <!-- Success Message -->
-            <div v-if="submitSuccess" class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <div class="flex items-center">
-                <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span class="text-green-800 font-medium">Request submitted successfully!</span>
-              </div>
-            </div>
-
-            <!-- Form -->
-            <form @submit.prevent="submitForm" class="space-y-6">
-              <!-- Name -->
-              <div>
-                <label class="form-label">Full Name *</label>
-                <input
-                  v-model="form.name"
-                  type="text"
-                  class="form-input"
-                  required
-                />
-              </div>
-
-              <!-- Email -->
-              <div>
-                <label class="form-label">Email *</label>
-                <input
-                  v-model="form.email"
-                  type="email"
-                  class="form-input"
-                  required
-                />
-              </div>
-
-              <!-- License Plate -->
-              <div>
-                <label class="form-label">License Plate *</label>
-                <input
-                  v-model="form.licensePlate"
-                  type="text"
-                  class="form-input"
-                  placeholder="ABC123"
-                  required
-                />
-              </div>
-
-              <!-- Request Type -->
-              <div>
-                <label class="form-label">Request Type *</label>
-                <select v-model="form.type" class="form-input" required>
-                  <option value="">Select type</option>
-                  <option value="request">New Request</option>
-                  <option value="appeal">Appeal</option>
-                </select>
-              </div>
-
-              <!-- Ticket ID (for appeals) -->
-              <div v-if="form.type === 'appeal'">
-                <label class="form-label">Ticket ID *</label>
-                <input
-                  v-model="form.ticketId"
-                  type="text"
-                  class="form-input"
-                  placeholder="TKT-12345"
-                  required
-                />
-              </div>
-
-              <!-- Details -->
-              <div>
-                <label class="form-label">Details *</label>
-                <textarea
-                  v-model="form.details"
-                  class="form-input"
-                  rows="4"
-                  placeholder="Please provide details about your request..."
-                  required
-                ></textarea>
-              </div>
-
-              <!-- Submit Button -->
-              <div class="flex flex-col sm:flex-row gap-4">
-                <button
-                  type="submit"
-                  :disabled="isSubmitting"
-                  class="btn-primary flex-1"
-                >
-                  <span v-if="isSubmitting">Submitting...</span>
-                  <span v-else>Submit Request</span>
-                </button>
-                <button
-                  type="button"
-                  @click="showSelfServeForm = false"
-                  class="btn-secondary flex-1"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
+      
+      <SuccessMessage
+        v-else
+        title="Parking Pass Requested!"
+        message="Your parking pass request has been submitted successfully. Please keep this confirmation for your records."
+        :data="successData"
+        @close="showSuccess = false"
+      />
+    </main>
   </div>
 </template>
 
 <script setup lang="ts">
-// Reactive state
-const showSelfServeForm = ref(false)
-const isSubmitting = ref(false)
-const submitSuccess = ref(false)
+const showSuccess = ref(false)
+const successData = ref(null)
 
-// Form data
-const form = reactive({
-  name: '',
-  email: '',
-  licensePlate: '',
-  type: '',
-  ticketId: '',
-  details: ''
-})
-
-// Submit form
-const submitForm = async () => {
-  isSubmitting.value = true
-  submitSuccess.value = false
-
-  try {
-    // Prepare submission data
-    const submissionData = {
-      name: form.name.trim(),
-      email: form.email.trim(),
-      licensePlate: form.licensePlate.trim().toUpperCase(),
-      type: form.type,
-      details: form.details.trim(),
-      timestamp: new Date().toISOString(),
-      ...(form.type === 'appeal' && { ticketId: form.ticketId.trim() })
-    }
-
-    // Submit to API
-    await $fetch('/api/submit', {
-      method: 'POST',
-      body: submissionData
-    })
-
-    // Show success and reset form
-    submitSuccess.value = true
-    form.name = ''
-    form.email = ''
-    form.licensePlate = ''
-    form.type = ''
-    form.ticketId = ''
-    form.details = ''
-
-    // Auto-hide success message after 5 seconds
-    setTimeout(() => {
-      submitSuccess.value = false
-    }, 5000)
-
-  } catch (error) {
-    console.error('Submission error:', error)
-    alert('Failed to submit request. Please try again.')
-  } finally {
-    isSubmitting.value = false
-  }
+const handleSuccess = (data: any) => {
+  successData.value = data
+  showSuccess.value = true
 }
+
+useHead({
+  title: 'Request Parking Pass | Parking Pass Request'
+})
 </script>
