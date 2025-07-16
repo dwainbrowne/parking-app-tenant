@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { vehicleSchema } from '~/utils/validation';
-import type { Vehicle } from '~/types';
+import { vehicleSchema } from '../../../utils/validation';
+import type { Vehicle } from '../../../types';
 
 // Mock vehicle database (in production, use a real database)
 const mockVehicles: (Vehicle & { userId: string })[] = [];
@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         statusMessage: 'Validation Error',
-        data: { message: validation.error.errors[0].message }
+        data: { message: validation.error.issues[0].message }
       });
     }
 

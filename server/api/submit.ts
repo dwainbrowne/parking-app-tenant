@@ -1,5 +1,5 @@
-import { submissionSchema } from '~/utils/validation';
-import type { Submission } from '~/types';
+import { submissionSchema } from '../../utils/validation';
+import type { Submission } from '../../types';
 
 export default defineEventHandler(async (event) => {
   // Only allow POST requests
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         statusMessage: 'Validation Error',
-        data: validation.error.errors
+        data: validation.error.issues
       });
     }
 

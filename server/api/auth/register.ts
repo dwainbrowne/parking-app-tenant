@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { registerSchema } from '~/utils/validation';
+import { registerSchema } from '../../../utils/validation';
 
 // Mock user database (in production, use a real database)
 const mockUsers: any[] = [];
@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         statusMessage: 'Validation Error',
-        data: { message: validation.error.errors[0].message }
+        data: { message: validation.error.issues[0].message }
       });
     }
 

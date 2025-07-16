@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { loginSchema } from '~/utils/validation';
+import { loginSchema } from '../../../utils/validation';
 
 // Mock user database (in production, use a real database)
 const mockUsers = [

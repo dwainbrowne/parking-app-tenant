@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { guestReservationSchema } from '~/utils/validation';
-import type { GuestReservation } from '~/types';
+import { guestReservationSchema } from '../../../utils/validation';
+import type { GuestReservation } from '../../../types';
 
 // Mock reservation database (in production, use a real database)
 const mockReservations: (GuestReservation & { userId: string })[] = [];
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         statusMessage: 'Validation Error',
-        data: { message: validation.error.errors[0].message }
+        data: { message: validation.error.issues[0].message }
       });
     }
 
