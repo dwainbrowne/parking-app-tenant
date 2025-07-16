@@ -1,0 +1,7 @@
+{
+  "name": "parking-app-tenant",
+  "compatibility_date": "2025-07-16",
+  "assets": {
+    "directory": ".output/public"
+  }
+}
