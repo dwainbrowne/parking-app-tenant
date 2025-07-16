@@ -9,6 +9,7 @@
 const { checkAuth } = useAuth();
 
 onMounted(() => {
-  checkAuth();
+  // Temporarily commented out to test
+  // checkAuth();
 });
 </script>
